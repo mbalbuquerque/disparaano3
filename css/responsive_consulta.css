@@ -1,0 +1,555 @@
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .nav {
+        gap: 18px;
+    }
+
+    .header-container > .btn-small {
+        display: none;
+    }
+
+    .vacancies-highlight {
+        position: static;
+
+        width: 150px;
+        height: 150px;
+
+        margin-top: 35px;
+    }
+
+    .event-grid {
+        gap: 45px;
+    }
+
+    .event-number strong {
+        font-size: 9rem;
+    }
+
+    .rules-container {
+        gap: 40px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE / TABLET
+========================================================= */
+
+@media (max-width: 820px) {
+
+    body {
+        padding-bottom: 70px;
+    }
+
+    .header-container {
+        height: 70px;
+    }
+
+    .brand-logo {
+        width: 115px;
+    }
+
+    .menu-toggle {
+        display: block;
+
+        position: relative;
+
+        z-index: 1002;
+    }
+
+    .nav {
+        position: fixed;
+
+        top: 0;
+        right: -100%;
+
+        width: min(320px, 85%);
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: flex-start;
+
+        padding: 50px;
+
+        gap: 30px;
+
+        background: rgba(2,8,23,.98);
+
+        border-left: 1px solid var(--blue-border);
+
+        transition: right .4s ease;
+    }
+
+    .nav.active {
+        right: 0;
+    }
+
+    .nav a {
+        font-size: 1.5rem;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* HERO */
+
+    .hero {
+        min-height: auto;
+
+        padding:
+            125px 0
+            85px;
+    }
+
+    .hero-title {
+        font-size: clamp(5.4rem, 23vw, 9rem);
+    }
+
+    .hero-edition {
+        margin-left: 65px;
+    }
+
+    .event-info {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .event-info-item {
+        min-height: 95px;
+
+        padding: 18px;
+    }
+
+    .event-info-item:nth-child(2) {
+        border-right: 0;
+    }
+
+    .event-info-item:last-child {
+        grid-column: 1 / -1;
+
+        padding-left: 0;
+
+        border-top: 1px solid var(--border);
+    }
+
+    .event-info-item strong {
+        font-size: 1.65rem;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+
+    /* COUNTDOWN */
+
+    .countdown {
+        gap: 10px;
+    }
+
+    .countdown-item {
+        min-width: auto;
+        flex: 1;
+    }
+
+    .countdown-item strong {
+        font-size: clamp(2.5rem, 11vw, 5rem);
+    }
+
+    .countdown-item span {
+        font-size: .55rem;
+    }
+
+    .countdown-separator {
+        font-size: 2rem;
+    }
+
+    /* EVENT */
+
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-number {
+        min-height: 320px;
+    }
+
+    /* LOCATION */
+
+    .location-container {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .location-card {
+        min-width: 0;
+        width: 100%;
+    }
+
+    /* REGISTRATION */
+
+    .registration-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* GALLERY */
+
+    .carousel-track {
+        min-height: 450px;
+    }
+
+    .carousel-button.prev {
+        left: 10px;
+    }
+
+    .carousel-button.next {
+        right: 10px;
+    }
+
+    /* RULES */
+
+    .rules-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* FOOTER */
+
+    .footer-container {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    /* FIXED CTA */
+
+    .mobile-registration-button {
+        position: fixed;
+
+        left: 15px;
+        right: 15px;
+        bottom: 12px;
+
+        z-index: 900;
+
+        min-height: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: var(--blue);
+
+        box-shadow:
+            0 12px 40px
+            rgba(23,23,255,.5);
+
+        font-family: var(--font-title);
+
+        font-size: 1.1rem;
+
+        font-weight: 900;
+
+        letter-spacing: .12em;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 540px) {
+
+    .container {
+        width: min(91%, 1180px);
+    }
+
+    .hero {
+        padding-top: 110px;
+    }
+
+    .event-edition {
+        font-size: .72rem;
+    }
+
+    .hero-title {
+        font-size: 5.1rem;
+    }
+
+    .hero-title .hashtag {
+        margin-right: 5px;
+    }
+
+    .hero-edition {
+        margin:
+            13px 0
+            25px 48px;
+
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: .92rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .vacancies-highlight {
+        width: 125px;
+        height: 125px;
+    }
+
+    .vacancies-highlight strong {
+        font-size: 3.3rem;
+    }
+
+    .countdown-section,
+    .event-section,
+    .registration-section,
+    .gallery-section,
+    .faq-section {
+        padding: 90px 0;
+    }
+
+    .countdown {
+        gap: 5px;
+    }
+
+    .countdown-separator {
+        margin-top: -20px;
+    }
+
+    .event-number strong {
+        font-size: 8rem;
+    }
+
+    .event-details {
+        display: grid;
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .event-details > div {
+        min-width: 0;
+
+        padding:
+            20px 10px;
+
+        text-align: center;
+    }
+
+    .event-details > div:first-child {
+        padding-left: 10px;
+    }
+
+    .event-details strong {
+        font-size: 1.8rem;
+    }
+
+    .event-details span {
+        font-size: .55rem;
+    }
+
+    .registration-card {
+        padding: 35px 25px;
+    }
+
+    .plan-price strong {
+        font-size: 4rem;
+    }
+
+    .carousel-track {
+        min-height: 380px;
+    }
+
+    .carousel-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    .gallery-placeholder span {
+        font-size: 7rem;
+    }
+
+    .rules-card {
+        grid-template-columns:
+            auto
+            1fr;
+    }
+
+    .rules-card .btn {
+        grid-column: 1 / -1;
+
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+@media (max-width: 820px) {
+
+    .registration-form-wrapper {
+        padding: 30px 20px;
+    }
+
+    .form-progress {
+        overflow-x: auto;
+    }
+
+    .progress-step small {
+        display: none;
+    }
+
+    .progress-line {
+        min-width: 25px;
+
+        margin-bottom: 0;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .option-grid,
+    .payment-options {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary > div {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .order-summary > div:last-child {
+        border-bottom: 0;
+    }
+
+    .pix-preview {
+        grid-template-columns: 1fr;
+    }
+
+    .qr-placeholder {
+        margin: auto;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 540px) {
+
+    .registration-form-wrapper {
+        width: calc(100% + 2px);
+
+        margin-left: -1px;
+
+        padding:
+            30px 15px;
+
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .registration-form-header h3 {
+        font-size: 2.2rem;
+    }
+
+    .athlete-block {
+        padding: 22px 15px;
+    }
+
+    .size-options {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .size-options span {
+        width: 100%;
+    }
+
+    .pix-code-area > div {
+        flex-direction: column;
+    }
+
+    .pix-code-area button {
+        min-height: 48px;
+    }
+}
+
+/* =========================================================
+   CONSULTA DE INSCRIÇÃO
+========================================================= */
+
+@media (max-width: 820px) {
+    .consultation-section {
+        padding: 90px 0;
+    }
+
+    .consultation-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .consultation-card {
+        padding: 30px 22px;
+    }
+}
+
+@media (max-width: 540px) {
+    .consultation-card {
+        padding: 26px 16px;
+    }
+
+    .consultation-data-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .consultation-intro h2 {
+        font-size: 3.2rem;
+    }
+
+    .consult-upload {
+        align-items: flex-start;
+    }
+}
