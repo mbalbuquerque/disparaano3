@@ -1,0 +1,58 @@
+# =====================================================
+# DISPARA TECHFIT - GITIGNORE
+# =====================================================
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Dependências Node (caso sejam adicionadas futuramente)
+node_modules/
+
+# Build / cache
+dist/
+.cache/
+.parcel-cache/
+.vite/
+
+# Netlify local
+.netlify/
+
+# Variáveis de ambiente / segredos
+.env
+.env.*
+!.env.example
+
+# Arquivos de configuração local
+config.local.js
+secrets.js
+secrets.json
+
+# Cobertura / testes
+coverage/
+
+# Python (caso alguma ferramenta local seja usada)
+__pycache__/
+*.pyc
+
+# Arquivos compactados de backup
+*.zip
+*.rar
+*.7z
