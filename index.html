@@ -1240,183 +1240,90 @@
             </div>
 
 
-            <div class="form-group">
+            <!-- =====================================================
+     FORMA DE PAGAMENTO
+===================================================== -->
 
-                <label>
-                    Forma de pagamento *
-                </label>
+<div class="form-group">
 
+    <label>
+        Forma de pagamento *
+    </label>
 
-                <div class="payment-options">
+    <div class="payment-options">
 
-                    <label class="payment-card">
+        <label class="payment-card">
 
-                        <input
-                            type="radio"
-                            name="pagamento"
-                            value="pix"
-                        >
-
-                        <span class="payment-icon">
-                            ◆
-                        </span>
-
-                        <span>
-                            <strong>PIX</strong>
-                            <small>
-                                Pagamento rápido
-                            </small>
-                        </span>
-
-                    </label>
-
-
-                    <label class="payment-card">
-
-                        <input
-                            type="radio"
-                            name="pagamento"
-                            value="cartao"
-                        >
-
-                        <span class="payment-icon">
-                            ▣
-                        </span>
-
-                        <span>
-                            <strong>
-                                CARTÃO DE CRÉDITO
-                            </strong>
-
-                            <small>
-                                Em até 2x
-                            </small>
-
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            <!-- PIX -->
-
-            <div
-                class="payment-content"
-                id="pixPayment"
+            <input
+                type="radio"
+                name="pagamento"
+                value="cartao"
+                checked
             >
 
-                <div class="payment-info">
+            <span class="payment-icon">
+                ▣
+            </span>
 
-                    <span class="payment-number">
-                        01
-                    </span>
+            <span>
+                <strong>
+                    PAGAMENTO ONLINE
+                </strong>
 
-                    <div>
+                <small>
+                    PIX OU CARTÃO DE CRÉDITO
+                </small>
+            </span>
 
-                        <strong>
-                            Faça o pagamento via PIX
-                        </strong>
+        </label>
 
-                        <p>
-                            Na etapa de integração,
-                            o QR Code e o código
-                            PIX aparecerão aqui.
-                        </p>
+    </div>
 
-                    </div>
-
-                </div>
+</div>
 
 
-                <div class="pix-preview">
+<!-- =====================================================
+     PAGAMENTO STONE
+===================================================== -->
 
-                    <div class="qr-placeholder">
+<div
+    class="payment-content"
+    id="cardPayment"
+>
 
-                        <span>
-                            QR
-                        </span>
+    <div class="payment-info">
 
-                        <small>
-                            PIX
-                        </small>
+        <span class="payment-number">
+            01
+        </span>
 
-                    </div>
+        <div>
 
+            <strong>
+                Pagamento seguro
+            </strong>
 
-                    <div class="pix-code-area">
+            <p>
+                Você será direcionado para o
+                ambiente seguro da Stone, onde
+                poderá pagar via PIX ou cartão
+                de crédito.
+            </p>
 
-                        <label>
-                            PIX Copia e Cola
-                        </label>
+        </div>
 
-                        <div>
-
-                            <input
-                                type="text"
-                                id="pixCode"
-                                value="Código PIX será disponibilizado aqui"
-                                readonly
-                            >
-
-                            <button
-                                type="button"
-                                id="copyPix"
-                            >
-                                Copiar
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
+    </div>
 
 
-            <!-- CARTÃO -->
+    <button
+        type="button"
+        class="btn btn-primary"
+        id="stonePaymentButton"
+    >
+        PAGAR COM PIX OU CARTÃO →
+    </button>
 
-            <div
-                class="payment-content"
-                id="cardPayment"
-            >
-
-                <div class="payment-info">
-
-                    <span class="payment-number">
-                        01
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Pagamento seguro
-                        </strong>
-
-                        <p>
-                            Você será direcionado para
-                            o ambiente seguro da Stone.
-                            Os dados do cartão não serão
-                            armazenados nesta página.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    id="stonePaymentButton"
-                >
-                    Pagar com cartão →
-                </button>
-
-            </div>
+</div>
 
 
             <div class="form-actions">

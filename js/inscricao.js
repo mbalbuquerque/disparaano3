@@ -589,59 +589,34 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 
-    /* =====================================================
-       PAGAMENTO
-    ===================================================== */
+   /* =====================================================
+   PAGAMENTO
+   Única forma disponível: Stone
+   PIX ou cartão de crédito
+===================================================== */
 
-    const pixPayment =
-        document.getElementById("pixPayment");
+const cardPayment =
+    document.getElementById("cardPayment");
 
-    const cardPayment =
-        document.getElementById("cardPayment");
-
-
-    document
-        .querySelectorAll(
-            'input[name="pagamento"]'
-        )
-        .forEach(input => {
-
-            input.addEventListener(
-                "change",
-                () => {
-
-                    pixPayment.classList.remove(
-                        "active"
-                    );
-
-                    cardPayment.classList.remove(
-                        "active"
-                    );
+const paymentInput =
+    document.querySelector(
+        'input[name="pagamento"][value="cartao"]'
+    );
 
 
-                    if (input.value === "pix") {
+/*
+ * Como Stone é a única forma de pagamento,
+ * deixa a opção selecionada e o conteúdo
+ * visível automaticamente.
+ */
 
-                        pixPayment.classList.add(
-                            "active"
-                        );
+if (paymentInput) {
+    paymentInput.checked = true;
+}
 
-                    }
-
-
-                    if (input.value === "cartao") {
-
-                        cardPayment.classList.add(
-                            "active"
-                        );
-
-                    }
-
-                }
-            );
-
-        });
-
-
+if (cardPayment) {
+    cardPayment.classList.add("active");
+}
    /* =====================================================
    LINK DE PAGAMENTO STONE
 ===================================================== */
@@ -713,40 +688,7 @@ if (stonePaymentButton) {
 }
 
 
-    /* =====================================================
-       COPIAR PIX
-    ===================================================== */
-
-    document
-        .getElementById("copyPix")
-        .addEventListener("click", async () => {
-
-            const pix =
-                document.getElementById(
-                    "pixCode"
-                ).value;
-
-
-            try {
-
-                await navigator.clipboard.writeText(
-                    pix
-                );
-
-                alert(
-                    "Código PIX copiado."
-                );
-
-            } catch {
-
-                alert(
-                    "Não foi possível copiar automaticamente."
-                );
-
-            }
-
-        });
-
+    
 
     /* =====================================================
        UPLOAD
