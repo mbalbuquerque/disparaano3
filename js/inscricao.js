@@ -1128,106 +1128,159 @@ async function uploadReceipt(
                 return;
             }
 
+/* =============================================
+   DADOS
+============================================== */
 
-            /* =============================================
-               DADOS
-            ============================================== */
+/*
+ * Distância do primeiro atleta.
+ * Obrigatória tanto no Individual
+ * quanto na Casadinha.
+ */
 
-            const data = {
-
-                plano:
-                    selectedPlan.value,
-
-                nome1:
-                    document.getElementById(
-                        "nome1"
-                    ).value.trim(),
-
-                telefone1:
-                    normalizePhone(
-                        document.getElementById(
-                            "telefone1"
-                        ).value
-                    ),
-
-                nascimento1:
-                    document.getElementById(
-                        "nascimento1"
-                    ).value,
-
-                modelo1:
-                    modelo1.value,
-
-                tamanho1:
-                    tamanho1.value,
-
-                formaPagamento:
-                    payment.value.toUpperCase(),
-
-                regulamentoAceito:
-                    regulation.checked
-
-            };
+const distancia1 =
+    document.querySelector(
+        'input[name="distancia"]:checked'
+    );
 
 
-            /* =============================================
-               CASADINHA
-            ============================================== */
+if (!distancia1) {
 
-            if (
-                selectedPlan.value ===
-                "casadinha"
-            ) {
+    alert(
+        "Selecione a distância do primeiro atleta: 3 KM ou 5 KM."
+    );
 
-                const modelo2 =
-                    document.querySelector(
-                        'input[name="modelo2"]:checked'
-                    );
-
-                const tamanho2 =
-                    document.querySelector(
-                        'input[name="tamanho2"]:checked'
-                    );
+    return;
+}
 
 
-                if (!modelo2 || !tamanho2) {
+const data = {
 
-                    alert(
-                        "Selecione o kit do segundo atleta."
-                    );
+    plano:
+        selectedPlan.value,
 
-                    return;
-                }
+    nome1:
+        document.getElementById(
+            "nome1"
+        ).value.trim(),
+
+    telefone1:
+        normalizePhone(
+            document.getElementById(
+                "telefone1"
+            ).value
+        ),
+
+    nascimento1:
+        document.getElementById(
+            "nascimento1"
+        ).value,
+
+    /* NOVO */
+    distancia1:
+        distancia1.value,
+
+    modelo1:
+        modelo1.value,
+
+    tamanho1:
+        tamanho1.value,
+
+    formaPagamento:
+        payment.value.toUpperCase(),
+
+    regulamentoAceito:
+        regulation.checked
+
+};
 
 
-                data.nome2 =
-                    document.getElementById(
-                        "nome2"
-                    ).value.trim();
+/* =============================================
+   CASADINHA
+============================================== */
+
+if (
+    selectedPlan.value ===
+    "casadinha"
+) {
+
+    const distancia2 =
+        document.querySelector(
+            'input[name="distancia2"]:checked'
+        );
 
 
-                data.telefone2 =
-                    normalizePhone(
-                        document.getElementById(
-                            "telefone2"
-                        ).value
-                    );
+    const modelo2 =
+        document.querySelector(
+            'input[name="modelo2"]:checked'
+        );
 
 
-                data.nascimento2 =
-                    document.getElementById(
-                        "nascimento2"
-                    ).value;
+    const tamanho2 =
+        document.querySelector(
+            'input[name="tamanho2"]:checked'
+        );
 
 
-                data.modelo2 =
-                    modelo2.value;
+    /*
+     * Distância obrigatória
+     * somente para Casadinha.
+     */
+
+    if (!distancia2) {
+
+        alert(
+            "Selecione a distância do segundo atleta: 3 KM ou 5 KM."
+        );
+
+        return;
+    }
 
 
-                data.tamanho2 =
-                    tamanho2.value;
+    if (!modelo2 || !tamanho2) {
 
-            }
+        alert(
+            "Selecione o kit do segundo atleta."
+        );
+
+        return;
+    }
+
+
+    data.nome2 =
+        document.getElementById(
+            "nome2"
+        ).value.trim();
+
+
+    data.telefone2 =
+        normalizePhone(
+            document.getElementById(
+                "telefone2"
+            ).value
+        );
+
+
+    data.nascimento2 =
+        document.getElementById(
+            "nascimento2"
+        ).value;
+
+
+    /* NOVO */
+
+    data.distancia2 =
+        distancia2.value;
+
+
+    data.modelo2 =
+        modelo2.value;
+
+
+    data.tamanho2 =
+        tamanho2.value;
+
+}
 
 
             /* =============================================
@@ -1281,9 +1334,13 @@ async function uploadReceipt(
                             },
 
                             body:
-                                JSON.stringify(data)
-                        }
-                    );
+                                JSON.stringify({
+                                    action: "createRegistration",
+                                    ...data
+                        })
+            }
+        );
+                    
 
 
                 if (!response.ok) {

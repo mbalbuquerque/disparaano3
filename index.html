@@ -31,6 +31,12 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+
+    <link
+    rel="icon"
+    type="image/png"
+    href="./assets/images/logo-dispara.png"
+>
 </head>
 
 <body>
@@ -736,199 +742,333 @@
         >
 
 
-        <!-- =============================================
-             ETAPA 1 - DADOS
-        ============================================== -->
+       <!-- =============================================
+     ETAPA 1 - DADOS
+============================================== -->
 
-        <div class="form-step active" data-form-step="1">
+<div class="form-step active" data-form-step="1">
 
-            <div class="form-step-title">
+    <div class="form-step-title">
 
-                <span>01</span>
+        <span>01</span>
 
-                <div>
-                    <h4>Dados do atleta</h4>
-                    <p>
-                        Informe seus dados para iniciar
-                        a inscrição.
-                    </p>
-                </div>
+        <div>
+            <h4>Dados do atleta</h4>
 
-            </div>
+            <p>
+                Informe seus dados para iniciar
+                a inscrição.
+            </p>
+        </div>
 
-
-            <!-- ATLETA 1 -->
-
-            <div class="athlete-block">
-
-                <div class="athlete-title">
-                    ATLETA 01
-                </div>
+    </div>
 
 
-                <div class="form-grid">
+    <!-- =====================================================
+         ATLETA 1
+    ====================================================== -->
 
-                    <div class="form-group full">
+    <div class="athlete-block">
 
-                        <label for="nome1">
-                            Nome completo *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="nome1"
-                            name="nome1"
-                            placeholder="Digite seu nome completo"
-                            autocomplete="name"
-                            required
-                        >
-
-                        <span class="field-error"></span>
-
-                    </div>
+        <div class="athlete-title">
+            ATLETA 01
+        </div>
 
 
-                    <div class="form-group">
+        <div class="form-grid">
 
-                        <label for="telefone1">
-                            WhatsApp / Telefone *
-                        </label>
+            <!-- NOME -->
 
-                        <input
-                            type="tel"
-                            id="telefone1"
-                            name="telefone1"
-                            placeholder="(81) 99999-9999"
-                            maxlength="15"
-                            autocomplete="tel"
-                            required
-                        >
+            <div class="form-group full">
 
-                        <small>
-                            Seu telefone será usado para
-                            identificar sua inscrição.
-                        </small>
+                <label for="nome1">
+                    Nome completo *
+                </label>
 
-                        <span class="field-error"></span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="nascimento1">
-                            Data de nascimento *
-                        </label>
-
-                        <input
-                            type="date"
-                            id="nascimento1"
-                            name="nascimento1"
-                            required
-                        >
-
-                        <small id="idade1">
-                            A idade será calculada automaticamente.
-                        </small>
-
-                        <span class="field-error"></span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ATLETA 2 - SOMENTE CASADINHA -->
-
-            <div
-                class="athlete-block second-athlete"
-                id="secondAthlete"
-            >
-
-                <div class="athlete-title">
-                    ATLETA 02
-                </div>
-
-
-                <div class="form-grid">
-
-                    <div class="form-group full">
-
-                        <label for="nome2">
-                            Nome completo *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="nome2"
-                            name="nome2"
-                            placeholder="Nome do segundo atleta"
-                        >
-
-                        <span class="field-error"></span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="telefone2">
-                            WhatsApp / Telefone *
-                        </label>
-
-                        <input
-                            type="tel"
-                            id="telefone2"
-                            name="telefone2"
-                            placeholder="(81) 99999-9999"
-                            maxlength="15"
-                        >
-
-                        <span class="field-error"></span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="nascimento2">
-                            Data de nascimento *
-                        </label>
-
-                        <input
-                            type="date"
-                            id="nascimento2"
-                            name="nascimento2"
-                        >
-
-                        <small id="idade2">
-                            A idade será calculada automaticamente.
-                        </small>
-
-                        <span class="field-error"></span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    class="btn btn-primary next-step"
-                    data-next="2"
+                <input
+                    type="text"
+                    id="nome1"
+                    name="nome1"
+                    placeholder="Digite seu nome completo"
+                    autocomplete="name"
+                    required
                 >
-                    Continuar →
-                </button>
+
+                <span class="field-error"></span>
+
+            </div>
+
+
+            <!-- TELEFONE -->
+
+            <div class="form-group">
+
+                <label for="telefone1">
+                    WhatsApp / Telefone *
+                </label>
+
+                <input
+                    type="tel"
+                    id="telefone1"
+                    name="telefone1"
+                    placeholder="(81) 99999-9999"
+                    maxlength="15"
+                    autocomplete="tel"
+                    required
+                >
+
+                <small>
+                    Seu telefone será usado para
+                    identificar sua inscrição.
+                </small>
+
+                <span class="field-error"></span>
+
+            </div>
+
+
+            <!-- DATA DE NASCIMENTO -->
+
+            <div class="form-group">
+
+                <label for="nascimento1">
+                    Data de nascimento *
+                </label>
+
+                <input
+                    type="date"
+                    id="nascimento1"
+                    name="nascimento1"
+                    required
+                >
+
+                <small id="idade1">
+                    A idade será calculada automaticamente.
+                </small>
+
+                <span class="field-error"></span>
 
             </div>
 
         </div>
+
+
+        <!-- =====================================================
+             DISTÂNCIA - ATLETA 1
+        ====================================================== -->
+
+        <div class="form-group">
+
+            <label>
+                Distância *
+            </label>
+
+            <div class="distance-options">
+
+                <label class="distance-card">
+
+                    <input
+                        type="radio"
+                        name="distancia"
+                        value="3KM"
+                        required
+                    >
+
+                    <span>
+                        <strong>3 KM</strong>
+
+                        <small>
+                            Percurso de 3 quilômetros
+                        </small>
+                    </span>
+
+                </label>
+
+
+                <label class="distance-card">
+
+                    <input
+                        type="radio"
+                        name="distancia"
+                        value="5KM"
+                        required
+                    >
+
+                    <span>
+                        <strong>5 KM</strong>
+
+                        <small>
+                            Percurso de 5 quilômetros
+                        </small>
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ATLETA 2 - SOMENTE CASADINHA
+    ====================================================== -->
+
+    <div
+        class="athlete-block second-athlete"
+        id="secondAthlete"
+    >
+
+        <div class="athlete-title">
+            ATLETA 02
+        </div>
+
+
+        <div class="form-grid">
+
+            <!-- NOME -->
+
+            <div class="form-group full">
+
+                <label for="nome2">
+                    Nome completo *
+                </label>
+
+                <input
+                    type="text"
+                    id="nome2"
+                    name="nome2"
+                    placeholder="Nome do segundo atleta"
+                >
+
+                <span class="field-error"></span>
+
+            </div>
+
+
+            <!-- TELEFONE -->
+
+            <div class="form-group">
+
+                <label for="telefone2">
+                    WhatsApp / Telefone *
+                </label>
+
+                <input
+                    type="tel"
+                    id="telefone2"
+                    name="telefone2"
+                    placeholder="(81) 99999-9999"
+                    maxlength="15"
+                >
+
+                <span class="field-error"></span>
+
+            </div>
+
+
+            <!-- DATA DE NASCIMENTO -->
+
+            <div class="form-group">
+
+                <label for="nascimento2">
+                    Data de nascimento *
+                </label>
+
+                <input
+                    type="date"
+                    id="nascimento2"
+                    name="nascimento2"
+                >
+
+                <small id="idade2">
+                    A idade será calculada automaticamente.
+                </small>
+
+                <span class="field-error"></span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             DISTÂNCIA - ATLETA 2
+        ====================================================== -->
+
+        <div class="form-group">
+
+            <label>
+                Distância do segundo atleta *
+            </label>
+
+            <div class="distance-options">
+
+                <label class="distance-card">
+
+                    <input
+                        type="radio"
+                        name="distancia2"
+                        value="3KM"
+                    >
+
+                    <span>
+                        <strong>3 KM</strong>
+
+                        <small>
+                            Percurso de 3 quilômetros
+                        </small>
+                    </span>
+
+                </label>
+
+
+                <label class="distance-card">
+
+                    <input
+                        type="radio"
+                        name="distancia2"
+                        value="5KM"
+                    >
+
+                    <span>
+                        <strong>5 KM</strong>
+
+                        <small>
+                            Percurso de 5 quilômetros
+                        </small>
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         AÇÕES - ETAPA 1
+    ====================================================== -->
+
+    <div class="form-actions">
+
+        <button
+            type="button"
+            class="btn btn-primary next-step"
+            data-next="2"
+        >
+            Continuar →
+        </button>
+
+    </div>
+
+</div>
+
+
+
 
 
         <!-- =============================================
