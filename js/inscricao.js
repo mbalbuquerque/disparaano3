@@ -1147,7 +1147,7 @@ const distancia1 =
 if (!distancia1) {
 
     alert(
-        "Selecione a distância do primeiro atleta: 3 KM ou 5 KM."
+        "Selecione a distância do primeiro atleta: 3 KM, 5 KM ou 10 KM."
     );
 
     return;
@@ -1176,7 +1176,6 @@ const data = {
             "nascimento1"
         ).value,
 
-    /* NOVO */
     distancia1:
         distancia1.value,
 
@@ -1230,7 +1229,7 @@ if (
     if (!distancia2) {
 
         alert(
-            "Selecione a distância do segundo atleta: 3 KM ou 5 KM."
+            "Selecione a distância do segundo atleta: 3 KM, 5 KM ou 10 KM."
         );
 
         return;
