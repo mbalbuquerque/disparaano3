@@ -1,1695 +1,1202 @@
+﻿
 document.addEventListener("DOMContentLoaded", () => {
+  "use strict";
 
-    /* =====================================================
-       API
-    ===================================================== */
+  // ==========================================
+  // CONFIGURAÇÕES
+  // ==========================================
 
-    const API_URL =
-        "https://script.google.com/macros/s/AKfycbzbBF7RMsasqi2FJOc0NxSzh6oyKCfRUmEugjDPIygmMmKXsU9ctBJM9I44kRWtSwBd9Q/exec";
+  
+const phoneInput = document.getElementById("telefone1");
 
+if (phoneInput) {
+  phoneInput.setAttribute("inputmode", "numeric");
+  phoneInput.setAttribute("maxlength", "15");
+  phoneInput.setAttribute("placeholder", "(81) 99999-9999");
 
-    /* =====================================================
-       LINKS DE PAGAMENTO STONE
-    ===================================================== */
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = formatPhone(phoneInput.value);
+    phoneInput.setCustomValidity("");
+  });
 
-    const PAYMENT_LINKS = {
-
-        individual:
-            "https://payment-link-v3.stone.com.br/pl_GJrE38wPApM1mpmtwEH0yo5vxl0j9B7Q",
-
-        casadinha:
-            "https://payment-link-v3.stone.com.br/pl_6EalRdKxVeyg8xGsLaI0EgQb1zmnkYGw"
-
-    };
-
-
-    const wrapper =
-        document.getElementById(
-            "registrationFormWrapper"
-        );
-
-    const form =
-        document.getElementById(
-            "registrationForm"
-        );
-
-    const success =
-        document.getElementById(
-            "registrationSuccess"
-        );
-
-    const selectedPlan =
-        document.getElementById(
-            "selectedPlan"
-        );
-
-    const selectedPlanTitle =
-        document.getElementById(
-            "selectedPlanTitle"
-        );
-
-    const secondAthlete =
-        document.getElementById(
-            "secondAthlete"
-        );
-
-    const secondAthleteKit =
-        document.getElementById(
-            "secondAthleteKit"
-        );
-
-    
-
-
-    /* =====================================================
-       ABRIR INSCRIÇÃO
-    ===================================================== */
-
-    document
-        .querySelectorAll(".registration-button")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const plan = button.dataset.plan;
-
-                selectedPlan.value = plan;
-
-                configurePlan(plan);
-
-                wrapper.classList.add("active");
-
-                showStep(1);
-
-                setTimeout(() => {
-
-                    wrapper.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-
-                }, 100);
-
-            });
-
-        });
-
-
-    /* =====================================================
-       CONFIGURAR PLANO
-    ===================================================== */
-
-    function configurePlan(plan) {
-
-        const isCouple =
-            plan === "casadinha";
-
-        selectedPlanTitle.textContent =
-            isCouple
-                ? "Inscrição Casadinha"
-                : "Inscrição Individual";
-
-
-        secondAthlete.classList.toggle(
-            "active",
-            isCouple
-        );
-
-        secondAthleteKit.classList.toggle(
-            "active",
-            isCouple
-        );
-
-
-        document.getElementById(
-            "summaryPlan"
-        ).textContent =
-            isCouple
-                ? "Casadinha"
-                : "Individual";
-
-
-        document.getElementById(
-            "summaryAthletes"
-        ).textContent =
-            isCouple ? "2" : "1";
-
-
-        document.getElementById(
-            "summaryPrice"
-        ).textContent =
-            isCouple
-                ? "R$ 139,90"
-                : "A confirmar";
-
-
-        /*
-         * Campos do segundo atleta só
-         * são obrigatórios na Casadinha.
-         */
-
-        [
-            "nome2",
-            "telefone2",
-            "nascimento2"
-        ].forEach(id => {
-
-            document
-                .getElementById(id)
-                .required = isCouple;
-
-        });
-
+  phoneInput.addEventListener("blur", () => {
+    if (phoneInput.value && !isValidMobilePhone(phoneInput.value)) {
+      phoneInput.setCustomValidity(
+        "Informe um celular válido com DDD e 9 dígitos."
+      );
+      phoneInput.reportValidity();
     }
-
-
-    /* =====================================================
-       FECHAR
-    ===================================================== */
-
-    document
-        .getElementById("closeRegistration")
-        .addEventListener("click", () => {
-
-            wrapper.classList.remove("active");
-
-        });
-
-
-    /* =====================================================
-       NAVEGAÇÃO
-    ===================================================== */
-
-    document
-        .querySelectorAll(".next-step")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const current =
-                    Number(
-                        button.closest(".form-step")
-                            .dataset.formStep
-                    );
-
-                const next =
-                    Number(button.dataset.next);
-
-
-                if (!validateStep(current)) {
-                    return;
-                }
-
-
-                showStep(next);
-
-            });
-
-        });
-
-
-    document
-        .querySelectorAll(".prev-step")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                showStep(
-                    Number(button.dataset.prev)
-                );
-
-            });
-
-        });
-
-
-    function showStep(step) {
-
-        document
-            .querySelectorAll(".form-step")
-            .forEach(element => {
-
-                element.classList.remove("active");
-
-            });
-
-
-        const target =
-            document.querySelector(
-                `[data-form-step="${step}"]`
-            );
-
-
-        if (target) {
-            target.classList.add("active");
-        }
-
-
-        document
-            .querySelectorAll(".progress-step")
-            .forEach(element => {
-
-                const number =
-                    Number(element.dataset.step);
-
-                element.classList.remove(
-                    "active",
-                    "completed"
-                );
-
-
-                if (number < step) {
-                    element.classList.add("completed");
-                }
-
-                if (number === step) {
-                    element.classList.add("active");
-                }
-
-            });
-
-
-        wrapper.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    }
-
-
-    /* =====================================================
-       VALIDAÇÃO
-    ===================================================== */
-
-    function validateStep(step) {
-
-        if (step === 1) {
-
-            const required =
-                document.querySelectorAll(
-                    '[data-form-step="1"] input[required]'
-                );
-
-
-            for (const input of required) {
-
-                if (!input.value.trim()) {
-
-                    input.focus();
-
-                    input.classList.add("error");
-
-                    return false;
-                }
-
-                input.classList.remove("error");
-
-            }
-
-
-            const phone1 =
-                normalizePhone(
-                    document.getElementById(
-                        "telefone1"
-                    ).value
-                );
-
-
-            if (phone1.length < 10) {
-
-                alert(
-                    "Informe um telefone válido."
-                );
-
-                return false;
-            }
-
-
-            /*
-             * Casadinha:
-             * não permitimos o mesmo telefone
-             * para os dois atletas.
-             */
-
-            if (
-                selectedPlan.value === "casadinha"
-            ) {
-
-                const phone2 =
-                    normalizePhone(
-                        document.getElementById(
-                            "telefone2"
-                        ).value
-                    );
-
-
-                if (phone2.length < 10) {
-
-                    alert(
-                        "Informe um telefone válido para o segundo atleta."
-                    );
-
-                    return false;
-                }
-
-
-                if (phone1 === phone2) {
-
-                    alert(
-                        "Os dois atletas precisam utilizar telefones diferentes."
-                    );
-
-                    return false;
-                }
-
-            }
-
-        }
-
-
-        if (step === 2) {
-
-            if (
-                !document.querySelector(
-                    'input[name="modelo1"]:checked'
-                ) ||
-                !document.querySelector(
-                    'input[name="tamanho1"]:checked'
-                )
-            ) {
-
-                alert(
-                    "Escolha o modelo e o tamanho do atleta 01."
-                );
-
-                return false;
-            }
-
-
-            if (
-                selectedPlan.value === "casadinha"
-            ) {
-
-                if (
-                    !document.querySelector(
-                        'input[name="modelo2"]:checked'
-                    ) ||
-                    !document.querySelector(
-                        'input[name="tamanho2"]:checked'
-                    )
-                ) {
-
-                    alert(
-                        "Escolha o modelo e o tamanho do atleta 02."
-                    );
-
-                    return false;
-                }
-
-            }
-
-        }
-
-
-        if (step === 3) {
-
-            const payment =
-                document.querySelector(
-                    'input[name="pagamento"]:checked'
-                );
-
-
-            if (!payment) {
-
-                alert(
-                    "Escolha uma forma de pagamento."
-                );
-
-                return false;
-            }
-
-        }
-
-
-        return true;
-    }
-
-
-    /* =====================================================
-       TELEFONE
-    ===================================================== */
-
-    function normalizePhone(value) {
-
-        return value.replace(/\D/g, "");
-
-    }
-
-
-    function formatPhone(input) {
-
-        let value =
-            normalizePhone(input.value)
-                .slice(0, 11);
-
-
-        if (value.length > 10) {
-
-            value = value.replace(
-                /(\d{2})(\d{5})(\d{4})/,
-                "($1) $2-$3"
-            );
-
-        } else if (value.length > 6) {
-
-            value = value.replace(
-                /(\d{2})(\d{4})(\d{0,4})/,
-                "($1) $2-$3"
-            );
-
-        }
-
-
-        input.value = value;
-
-    }
-
-
-    [
-        "telefone1",
-        "telefone2"
-    ].forEach(id => {
-
-        const input =
-            document.getElementById(id);
-
-        input.addEventListener(
-            "input",
-            () => formatPhone(input)
-        );
-
+  });
+}
+
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbzbBF7RMsasqi2FJOc0NxSzh6oyKCfRUmEugjDPIygmMmKXsU9ctBJM9I44kRWtSwBd9Q/exec";
+
+  const PAYMENT_LINKS = Object.freeze({
+    normal:
+      "https://payment-link-v3.stone.com.br/pl_GJrE38wPApM1mpmtwEH0yo5vxl0j9B7Q",
+
+    promocional:
+      "https://payment-link-v3.stone.com.br/pl_eY6raLb87lBZAO0hWnU32nDXW0N9KVyw"
+  });
+
+  const PRECO_NORMAL = 87;
+  const PRECO_PROMOCIONAL = 79;
+  const DESCONTO = 8;
+  const TAXA_ADMINISTRATIVA = 7;
+  const LIMITE_VAGAS = 200;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+  // ==========================================
+  // CUPONS DOS DIVULGADORES
+  // ==========================================
+
+  const CUPONS = Object.freeze({
+    disparajack: "Aqueline",
+    disparaadri: "Adriele",
+    diaparalet: "Lethicia",
+    disparafran: "Francielly",
+    disparamalu: "Malu",
+    disparapaloma: "Paloma",
+    disparaleo: "Léo",
+    disparajulio: "Júlio",
+    disparaanderson: "Anderson",
+    dispararafa: "Rafa",
+    disparasasa: "Samantha",
+    diaparamari: "Mari",
+    disparabruno: "Bruno",
+    disparabeca: "Rebeca",
+    disparajunior: "Júnior",
+    disparabeto: "Alberto",
+    disparaulisses: "Ulisses",
+    disparadarla: "Darla",
+    disparawanessa: "Wanessa",
+    disparatati: "Tati",
+    disparatavares: "Tavares"
+  });
+
+  // ==========================================
+  // ELEMENTOS DA INTERFACE
+  // ==========================================
+
+  const $ = id => document.getElementById(id);
+
+  const wrapper = $("registrationFormWrapper");
+  const form = $("registrationForm");
+  const success = $("registrationSuccess");
+
+  const selectedPlan = $("selectedPlan");
+  const selectedPlanTitle = $("selectedPlanTitle");
+
+  const couponInput = $("couponCode");
+  const couponButton = $("applyCoupon");
+  const couponFeedback = $("couponFeedback");
+
+  const receipt = $("paymentReceipt");
+  const selectedFile = $("selectedFile");
+
+  const stoneButton = $("stonePaymentButton");
+  const finishButton = $("finishRegistration");
+
+  // ==========================================
+  // ESTADO DA INSCRIÇÃO
+  // ==========================================
+
+  let currentStep = 1;
+  let cupomAplicado = "";
+  let pagamentoIniciado = false;
+  let inscricaoCriada = null;
+  let enviandoInscricao = false;
+
+  if (!form || !wrapper) {
+    console.error(
+      "Dispara TechFit: formulário de inscrição não encontrado."
+    );
+    return;
+  }
+
+  // ==========================================
+  // UTILITÁRIOS
+  // ==========================================
+
+  function formatBRL(value) {
+    return Number(value).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
     });
+  }
 
+  function normalizePhone(value) {
+    return String(value || "").replace(/\D/g, "");
+  }
 
-    /* =====================================================
-       IDADE NO DIA DO EVENTO
-    ===================================================== */
+  function normalizeCoupon(value) {
+    return String(value || "").trim().toLowerCase();
+  }
 
-    const EVENT_DATE =
-        new Date("2026-12-06T05:00:00-03:00");
+  function getCouponOwner(code) {
+    return Object.prototype.hasOwnProperty.call(CUPONS, code)
+      ? CUPONS[code]
+      : "";
+  }
 
+  function getCurrentPrice() {
+    return cupomAplicado
+      ? PRECO_PROMOCIONAL
+      : PRECO_NORMAL;
+  }
 
-    function calculateAge(dateValue) {
-
-        if (!dateValue) {
-            return null;
-        }
-
-
-        const birth =
-            new Date(
-                dateValue + "T12:00:00"
-            );
-
-
-        let age =
-            EVENT_DATE.getFullYear()
-            - birth.getFullYear();
-
-
-        const month =
-            EVENT_DATE.getMonth()
-            - birth.getMonth();
-
-
-        if (
-            month < 0 ||
-            (
-                month === 0 &&
-                EVENT_DATE.getDate()
-                < birth.getDate()
-            )
-        ) {
-
-            age--;
-
-        }
-
-
-        return age;
-    }
-
-
-    function ageHandler(inputId, outputId) {
-
-        const input =
-            document.getElementById(inputId);
-
-        const output =
-            document.getElementById(outputId);
-
-
-        input.addEventListener(
-            "change",
-            () => {
-
-                const age =
-                    calculateAge(input.value);
-
-
-                if (
-                    age === null ||
-                    age < 0
-                ) {
-
-                    output.textContent =
-                        "Informe uma data válida.";
-
-                    return;
-                }
-
-
-                output.textContent =
-                    `Idade no dia do evento: ${age} anos`;
-
-            }
-        );
-
-    }
-
-
-    ageHandler(
-        "nascimento1",
-        "idade1"
+  function getChecked(name) {
+    return form.querySelector(
+      `input[name="${name}"]:checked`
     );
-
-    ageHandler(
-        "nascimento2",
-        "idade2"
-    );
-
-
-   /* =====================================================
-   PAGAMENTO
-   Única forma disponível: Stone
-   PIX ou cartão de crédito
-===================================================== */
-
-const cardPayment =
-    document.getElementById("cardPayment");
-
-const paymentInput =
-    document.querySelector(
-        'input[name="pagamento"][value="cartao"]'
-    );
-
-
-/*
- * Como Stone é a única forma de pagamento,
- * deixa a opção selecionada e o conteúdo
- * visível automaticamente.
- */
-
-if (paymentInput) {
-    paymentInput.checked = true;
-}
-
-if (cardPayment) {
-    cardPayment.classList.add("active");
-}
-   /* =====================================================
-   LINK DE PAGAMENTO STONE
-===================================================== */
-
-const stonePaymentButton =
-    document.getElementById(
-        "stonePaymentButton"
-    );
-
-
-if (stonePaymentButton) {
-
-    stonePaymentButton.addEventListener(
-        "click",
-        () => {
-
-            /*
-             * Recupera o plano escolhido
-             * anteriormente pelo participante.
-             */
-
-            const plan =
-                String(
-                    selectedPlan.value || ""
-                )
-                    .trim()
-                    .toLowerCase();
-
-
-            /*
-             * Localiza automaticamente
-             * o checkout correspondente.
-             */
-
-            const paymentUrl =
-                PAYMENT_LINKS[plan];
-
-
-            /*
-             * Segurança:
-             * não abre nenhum checkout caso
-             * o plano não tenha sido identificado.
-             */
-
-            if (!paymentUrl) {
-
-                alert(
-                    "Não foi possível identificar o plano selecionado."
-                );
-
-                return;
-            }
-
-
-            /*
-             * Abre o checkout Stone
-             * em uma nova aba.
-             */
-
-            window.open(
-                paymentUrl,
-                "_blank",
-                "noopener,noreferrer"
-            );
-
-        }
-    );
-
-}
-
-
-    
-
-    /* =====================================================
-       UPLOAD
-    ===================================================== */
-
-    const receipt =
-        document.getElementById(
-            "paymentReceipt"
-        );
-
-    const selectedFile =
-        document.getElementById(
-            "selectedFile"
-        );
-
-
-    receipt.addEventListener(
-        "change",
-        () => {
-
-            const file =
-                receipt.files[0];
-
-
-            if (!file) {
-
-                selectedFile.textContent = "";
-
-                return;
-            }
-
-
-            const maxSize =
-                5 * 1024 * 1024;
-
-
-            if (file.size > maxSize) {
-
-                alert(
-                    "O comprovante deve ter no máximo 5 MB."
-                );
-
-                receipt.value = "";
-
-                return;
-            }
-
-
-            selectedFile.textContent =
-                `✓ ${file.name}`;
-
-        }
-    );
-
-    /* =====================================================
-       ARQUIVO → BASE64
-    ===================================================== */
-
-    function fileToBase64(file) {
-
-        return new Promise(
-            (resolve, reject) => {
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload = () => {
-
-                    const result =
-                        String(
-                            reader.result
-                        );
-
-
-                    /*
-                     * Remove:
-                     *
-                     * data:image/jpeg;base64,
-                     */
-
-                    const base64 =
-                        result.includes(",")
-                            ? result.split(",")[1]
-                            : result;
-
-
-                    resolve(base64);
-
-                };
-
-
-                reader.onerror = () => {
-
-                    reject(
-                        new Error(
-                            "Não foi possível ler o comprovante."
-                        )
-                    );
-
-                };
-
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            }
-        );
-
+  }
+
+  function getValue(id) {
+    return String($(id)?.value || "").trim();
+  }
+
+  function showMessage(message) {
+    window.alert(message);
+  }
+
+  // ==========================================
+  // COMUNICAÇÃO COM GOOGLE APPS SCRIPT
+  // ==========================================
+
+  async function postAPI(payload) {
+    let response;
+
+    try {
+      response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload),
+        redirect: "follow"
+      });
+    } catch (error) {
+      console.error("Erro de conexão:", error);
+
+      throw new Error(
+        "Não foi possível conectar ao servidor. " +
+        "Verifique sua internet e tente novamente."
+      );
     }
-
-    /* =====================================================
-      /* =====================================================
-   ENVIAR COMPROVANTE
-===================================================== */
-
-async function uploadReceipt(
-    registrationId,
-    telefone,
-    file
-) 
-{
-
-    /* ===============================================
-       VALIDAÇÕES BÁSICAS
-    =============================================== */
-
-    if (!registrationId) {
-
-        throw new Error(
-            "Número da inscrição não informado."
-        );
-
-    }
-
-
-    if (!telefone) {
-
-        throw new Error(
-            "Telefone da inscrição não informado."
-        );
-
-    }
-
-
-    if (!file) {
-
-        throw new Error(
-            "Selecione um comprovante."
-        );
-
-    }
-
-
-    /* ===============================================
-       TAMANHO - 5 MB
-
-       É apenas uma validação antecipada.
-       O backend também valida.
-    =============================================== */
-
-    const MAX_FILE_SIZE =
-        5 * 1024 * 1024;
-
-
-    if (
-        file.size >
-        MAX_FILE_SIZE
-    ) {
-
-        throw new Error(
-            "O comprovante deve ter no máximo 5 MB."
-        );
-
-    }
-
-
-    /* ===============================================
-       TIPOS PERMITIDOS
-
-       O backend continuará sendo a autoridade.
-    =============================================== */
-
-    const allowedTypes = [
-
-        "image/jpeg",
-        "image/png",
-        "application/pdf"
-
-    ];
-
-
-    if (
-        !allowedTypes.includes(
-            file.type
-        )
-    ) {
-
-        throw new Error(
-            "Formato inválido. Envie JPG, PNG ou PDF."
-        );
-
-    }
-
-
-    /* ===============================================
-       CONVERTER PARA BASE64
-    =============================================== */
-
-    const base64 =
-        await fileToBase64(
-            file
-        );
-
-
-    /* ===============================================
-       PAYLOAD
-
-       IMPORTANTE:
-       agora enviamos também o telefone.
-    =============================================== */
-
-    const payload = {
-
-        action:
-            "uploadComprovante",
-
-        registrationId:
-            String(
-                registrationId
-            )
-            .trim()
-            .toUpperCase(),
-
-        telefone:
-            String(
-                telefone
-            )
-            .replace(
-                /\D/g,
-                ""
-            ),
-
-        file: {
-
-            name:
-                file.name,
-
-            mimeType:
-                file.type,
-
-            base64:
-                base64
-
-        }
-
-    };
-
-
-    /* ===============================================
-       REQUISIÇÃO
-    =============================================== */
-
-    const response =
-        await fetch(
-            API_URL,
-            {
-
-                method:
-                    "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "text/plain;charset=utf-8"
-
-                },
-
-                body:
-                    JSON.stringify(
-                        payload
-                    )
-
-            }
-        );
-
-
-    /* ===============================================
-       RESPOSTA HTTP
-    =============================================== */
 
     if (!response.ok) {
-
-        throw new Error(
-            "Falha ao comunicar com o servidor."
-        );
-
+      throw new Error(
+        `Erro de comunicação com o servidor (${response.status}).`
+      );
     }
-
-
-    /* ===============================================
-       JSON
-    =============================================== */
 
     let result;
 
-
     try {
-
-        result =
-            await response.json();
-
+      result = await response.json();
+    } catch (error) {
+      throw new Error(
+        "O servidor retornou uma resposta inválida."
+      );
     }
 
-    catch (error) {
-
-        throw new Error(
-            "Resposta inválida do servidor."
-        );
-
+    if (!result || result.success !== true) {
+      throw new Error(
+        result?.message ||
+        "Não foi possível concluir a operação."
+      );
     }
-
-
-    /* ===============================================
-       ERRO DO BACKEND
-    =============================================== */
-
-    if (
-        !result.success
-    ) {
-
-        throw new Error(
-            result.message ||
-            "Não foi possível salvar o comprovante."
-        );
-
-    }
-
-
-    /* ===============================================
-       SUCESSO
-    =============================================== */
 
     return result;
+  }
 
+  // FIM DA PARTE 1
 
+  // ==========================================
+  // CONFIGURAÇÃO DO PLANO
+  // ==========================================
+
+  function configurePlan() {
+    if (selectedPlan) {
+      selectedPlan.value = "individual";
     }
-    /* =====================================================
-   ENVIAR INSCRIÇÃO
-===================================================== */
 
-    form.addEventListener(
-        "submit",
-        async event => {
+    if (selectedPlanTitle) {
+      selectedPlanTitle.textContent = "Inscrição Individual";
+    }
 
-            event.preventDefault();
+    updateSummary();
+  }
 
+  // ==========================================
+  // ABRIR FORMULÁRIO
+  // ==========================================
 
-            const finishButton =
-                document.getElementById(
-                    "finishRegistration"
-                );
+  document
+    .querySelectorAll(".registration-button")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        configurePlan();
 
-            const regulation =
-                document.getElementById(
-                    "regulationAccept"
-                );
+        wrapper.classList.add("active");
+        showStep(1);
+      });
+    });
 
+  // ==========================================
+  // FECHAR FORMULÁRIO
+  // ==========================================
 
-            /* =============================================
-               COMPROVANTE
-               Upload real entra na próxima etapa
-            ============================================== */
+  $("closeRegistration")?.addEventListener("click", () => {
+    wrapper.classList.remove("active");
+  });
 
-            if (!receipt.files.length) {
+  // ==========================================
+  // NAVEGAÇÃO ENTRE ETAPAS
+  // ==========================================
 
-                alert(
-                    "Envie o comprovante do pagamento."
-                );
+  function showStep(step) {
+    if (step < 1 || step > 4) return;
 
-                return;
-            }
+    currentStep = step;
 
+    document.querySelectorAll(".form-step").forEach(element => {
+      const numero = Number(element.dataset.formStep);
 
-            if (!regulation.checked) {
+      element.classList.toggle("active", numero === step);
+      element.style.display = numero === step ? "block" : "none";
+    });
 
-                alert(
-                    "É necessário aceitar o regulamento."
-                );
+    document.querySelectorAll(".progress-step").forEach(element => {
+      const numero = Number(element.dataset.step);
 
-                return;
-            }
+      element.classList.toggle("active", numero === step);
+      element.classList.toggle("completed", numero < step);
+    });
 
+    if (step === 3) {
+      updateSummary();
+      updateCouponUI();
+    }
 
-            /* =============================================
-               PAGAMENTO
-            ============================================== */
+    wrapper.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 
-            const payment =
-                document.querySelector(
-                    'input[name="pagamento"]:checked'
-                );
+  // ==========================================
+  // BOTÕES AVANÇAR
+  // ==========================================
 
+  document.querySelectorAll("[data-next]").forEach(button => {
+    button.addEventListener("click", () => {
+      const destino = Number(button.dataset.next);
 
-            if (!payment) {
+      if (!validateStep(currentStep)) {
+        return;
+      }
 
-                alert(
-                    "Escolha a forma de pagamento."
-                );
+      if (destino !== currentStep + 1) {
+        return;
+      }
 
-                return;
-            }
+      showStep(destino);
+    });
+  });
 
+  // ==========================================
+  // BOTÕES VOLTAR
+  // ==========================================
 
-            /* =============================================
-               KIT ATLETA 1
-            ============================================== */
+  document.querySelectorAll("[data-prev]").forEach(button => {
+    button.addEventListener("click", () => {
+      const destino = Number(button.dataset.prev);
 
-            const modelo1 =
-                document.querySelector(
-                    'input[name="modelo1"]:checked'
-                );
+      if (destino >= 1 && destino < currentStep) {
+        showStep(destino);
+      }
+    });
+  });
 
-            const tamanho1 =
-                document.querySelector(
-                    'input[name="tamanho1"]:checked'
-                );
+  // ==========================================
+  // VALIDAÇÕES
+  // ==========================================
 
+  function validateStep(step) {
 
-            if (!modelo1 || !tamanho1) {
+    // ETAPA 1 — DADOS DO ATLETA
+    if (step === 1) {
+      const nome = getValue("nome1");
+      const telefone = normalizePhone(getValue("telefone1"));
+      const nascimento = getValue("nascimento1");
+      const distancia = getChecked("distancia");
 
-                alert(
-                    "Selecione o modelo e tamanho do atleta."
-                );
+      if (nome.length < 3) {
+        showMessage("Informe o nome completo do atleta.");
+        $("nome1")?.focus();
+        return false;
+      }
 
-                return;
-            }
+      if (telefone.length < 10 || telefone.length > 11) {
+        showMessage("Informe um telefone válido com DDD.");
+        $("telefone1")?.focus();
+        return false;
+      }
 
-/* =============================================
-   DADOS
-============================================== */
+      if (!nascimento) {
+        showMessage("Informe a data de nascimento.");
+        $("nascimento1")?.focus();
+        return false;
+      }
 
-/*
- * Distância do primeiro atleta.
- * Obrigatória tanto no Individual
- * quanto na Casadinha.
- */
+      const dataNascimento = new Date(`${nascimento}T12:00:00`);
+      const hoje = new Date();
 
-const distancia1 =
-    document.querySelector(
-        'input[name="distancia"]:checked'
+      if (
+        Number.isNaN(dataNascimento.getTime()) ||
+        dataNascimento > hoje
+      ) {
+        showMessage("Informe uma data de nascimento válida.");
+        $("nascimento1")?.focus();
+        return false;
+      }
+
+      if (!distancia) {
+        showMessage(
+          "Selecione a distância: 3 KM, 5 KM ou 10 KM."
+        );
+        return false;
+      }
+
+      if (!["3KM", "5KM", "10KM"].includes(distancia.value)) {
+        showMessage("A distância selecionada é inválida.");
+        return false;
+      }
+    }
+
+    // ETAPA 2 — MODELO E TAMANHO
+    if (step === 2) {
+      const modelo = getChecked("modelo1");
+      const tamanho = getChecked("tamanho1");
+
+      if (!modelo) {
+        showMessage("Selecione Camisa ou Top.");
+        return false;
+      }
+
+      if (!["Camisa", "Top"].includes(modelo.value)) {
+        showMessage("O modelo selecionado é inválido.");
+        return false;
+      }
+
+      if (!tamanho) {
+        showMessage("Selecione o tamanho do kit.");
+        return false;
+      }
+
+      if (
+        !["PP", "P", "M", "G", "GG", "XG"].includes(tamanho.value)
+      ) {
+        showMessage("O tamanho selecionado é inválido.");
+        return false;
+      }
+    }
+
+    // ETAPA 3 — PAGAMENTO
+    if (step === 3) {
+      const pagamento = getChecked("pagamento");
+
+      if (!pagamento || pagamento.value !== "cartao") {
+        showMessage("Selecione o pagamento via Stone.");
+        return false;
+      }
+
+      if (
+        couponInput?.value.trim() &&
+        normalizeCoupon(couponInput.value) !== cupomAplicado
+      ) {
+        showMessage(
+          "Aplique um cupom válido ou remova o código informado."
+        );
+        return false;
+      }
+
+      if (!pagamentoIniciado) {
+        showMessage(
+          "Antes de continuar, abra o link de pagamento da Stone."
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // ==========================================
+  // RESUMO DA INSCRIÇÃO
+  // ==========================================
+
+  function updateSummary() {
+    const distancia = getChecked("distancia");
+    const modelo = getChecked("modelo1");
+    const tamanho = getChecked("tamanho1");
+
+    if ($("summaryPlan")) {
+      $("summaryPlan").textContent = "Individual";
+    }
+
+    if ($("summaryAthletes")) {
+      $("summaryAthletes").textContent = "1";
+    }
+
+    if ($("summaryPrice")) {
+      $("summaryPrice").textContent = formatBRL(getCurrentPrice());
+    }
+
+    // Detalhes opcionais, caso existam no HTML
+    if ($("summaryDistance")) {
+      $("summaryDistance").textContent =
+        distancia?.value || "Não selecionada";
+    }
+
+    if ($("summaryModel")) {
+      $("summaryModel").textContent =
+        modelo?.value || "Não selecionado";
+    }
+
+    if ($("summarySize")) {
+      $("summarySize").textContent =
+        tamanho?.value || "Não selecionado";
+    }
+  }
+
+  // ==========================================
+  // ATUALIZAÇÃO DA ESCOLHA DO KIT
+  // ==========================================
+
+  document
+    .querySelectorAll(
+      'input[name="distancia"], input[name="modelo1"], input[name="tamanho1"]'
+    )
+    .forEach(input => {
+      input.addEventListener("change", updateSummary);
+    });
+
+  // ==========================================
+  // MÁSCARA DE TELEFONE
+  // ==========================================
+
+  $("telefone1")?.addEventListener("input", event => {
+    const digits = normalizePhone(event.target.value).slice(0, 11);
+
+    if (digits.length <= 2) {
+      event.target.value = digits;
+    } else if (digits.length <= 6) {
+      event.target.value =
+        `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    } else if (digits.length <= 10) {
+      event.target.value =
+        `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    } else {
+      event.target.value =
+        `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+    }
+  });
+
+  // FIM DA PARTE 2
+
+  // ==========================================
+  // CUPONS PROMOCIONAIS
+  // ==========================================
+
+  function setCouponFeedback(message, state = "") {
+    if (!couponFeedback) return;
+
+    couponFeedback.textContent = message;
+    couponFeedback.dataset.state = state;
+
+    couponFeedback.style.color =
+      state === "success"
+        ? "#22c55e"
+        : state === "error"
+          ? "#ef4444"
+          : "";
+  }
+
+  function updateCouponUI() {
+    const preco = getCurrentPrice();
+
+    if ($("summaryPrice")) {
+      $("summaryPrice").textContent = formatBRL(preco);
+    }
+
+    if ($("couponBasePrice")) {
+      $("couponBasePrice").textContent =
+        formatBRL(preco - TAXA_ADMINISTRATIVA);
+    }
+
+    if ($("couponFee")) {
+      $("couponFee").textContent =
+        formatBRL(TAXA_ADMINISTRATIVA);
+    }
+
+    if ($("couponFinalPrice")) {
+      $("couponFinalPrice").textContent = formatBRL(preco);
+    }
+
+    if ($("couponBreakdown")) {
+      $("couponBreakdown").hidden = !cupomAplicado;
+    }
+
+    updateStonePaymentLink();
+  }
+
+  function applyCoupon() {
+    if (!couponInput) return false;
+
+    // Impede mudanças depois de iniciar o pagamento.
+    // Não apaga um cupom já aplicado.
+    if (pagamentoIniciado) {
+      setCouponFeedback(
+        "O pagamento já foi iniciado. Não é possível alterar o cupom.",
+        "error"
+      );
+      return false;
+    }
+
+    const code = normalizeCoupon(couponInput.value);
+    const owner = getCouponOwner(code);
+
+    if (!code) {
+      cupomAplicado = "";
+
+      setCouponFeedback(
+        "Digite um cupom ou continue sem desconto."
+      );
+
+      updateCouponUI();
+      return false;
+    }
+
+    if (!owner) {
+      cupomAplicado = "";
+
+      setCouponFeedback(
+        "Cupom inválido. Confira o código informado.",
+        "error"
+      );
+
+      updateCouponUI();
+      return false;
+    }
+
+    cupomAplicado = code;
+    couponInput.value = code;
+
+    setCouponFeedback(
+      `Cupom aplicado! Divulgador: ${owner}. ` +
+      `Desconto: ${formatBRL(DESCONTO)}. ` +
+      `Total: ${formatBRL(PRECO_PROMOCIONAL)}.`,
+      "success"
     );
 
+    updateCouponUI();
+    return true;
+  }
 
-if (!distancia1) {
+  couponButton?.addEventListener("click", applyCoupon);
 
-    alert(
-        "Selecione a distância do primeiro atleta: 3 KM, 5 KM ou 10 KM."
+  couponInput?.addEventListener("input", () => {
+    if (pagamentoIniciado) return;
+
+    cupomAplicado = "";
+    setCouponFeedback("");
+    updateCouponUI();
+  });
+
+  // ==========================================
+  // PAGAMENTO STONE
+  // ==========================================
+
+  
+function updateStonePaymentLink() {
+  if (!stoneButton) return;
+
+  // O mesmo link Stone será utilizado
+  // para cartão de crédito e PIX.
+  const url = cupomAplicado
+    ? PAYMENT_LINKS.promocional
+    : PAYMENT_LINKS.normal;
+
+  stoneButton.href = url;
+
+  stoneButton.textContent =
+    `PAGAR INSCRIÇÃO — ${formatBRL(getCurrentPrice())}`;
+
+  stoneButton.target = "_blank";
+  stoneButton.rel = "noopener noreferrer";
+}
+
+stoneButton?.addEventListener("click", event => {
+
+  // Validar etapas obrigatórias
+  if (
+    !validateStep(1) ||
+    !validateStep(2)
+  ) {
+    event.preventDefault();
+    return;
+  }
+
+  const pagamento = getChecked("pagamento");
+
+  // Aceitar cartão e PIX
+  const formasPermitidas = ["cartao", "pix"];
+
+  if (
+    !pagamento ||
+    !formasPermitidas.includes(pagamento.value)
+  ) {
+    event.preventDefault();
+
+    showMessage(
+      "Selecione uma forma de pagamento: cartão ou PIX."
     );
 
     return;
-}
-
-
-const data = {
-
-    plano:
-        selectedPlan.value,
-
-    nome1:
-        document.getElementById(
-            "nome1"
-        ).value.trim(),
-
-    telefone1:
-        normalizePhone(
-            document.getElementById(
-                "telefone1"
-            ).value
-        ),
-
-    nascimento1:
-        document.getElementById(
-            "nascimento1"
-        ).value,
-
-    distancia1:
-        distancia1.value,
-
-    modelo1:
-        modelo1.value,
-
-    tamanho1:
-        tamanho1.value,
-
-    formaPagamento:
-        payment.value.toUpperCase(),
-
-    regulamentoAceito:
-        regulation.checked
-
-};
-
-
-/* =============================================
-   CASADINHA
-============================================== */
-
-if (
-    selectedPlan.value ===
-    "casadinha"
-) {
-
-    const distancia2 =
-        document.querySelector(
-            'input[name="distancia2"]:checked'
-        );
-
-
-    const modelo2 =
-        document.querySelector(
-            'input[name="modelo2"]:checked'
-        );
-
-
-    const tamanho2 =
-        document.querySelector(
-            'input[name="tamanho2"]:checked'
-        );
-
-
-    /*
-     * Distância obrigatória
-     * somente para Casadinha.
-     */
-
-    if (!distancia2) {
-
-        alert(
-            "Selecione a distância do segundo atleta: 3 KM, 5 KM ou 10 KM."
-        );
-
-        return;
-    }
-
-
-    if (!modelo2 || !tamanho2) {
-
-        alert(
-            "Selecione o kit do segundo atleta."
-        );
-
-        return;
-    }
-
-
-    data.nome2 =
-        document.getElementById(
-            "nome2"
-        ).value.trim();
-
-
-    data.telefone2 =
-        normalizePhone(
-            document.getElementById(
-                "telefone2"
-            ).value
-        );
-
-
-    data.nascimento2 =
-        document.getElementById(
-            "nascimento2"
-        ).value;
-
-
-    /* NOVO */
-
-    data.distancia2 =
-        distancia2.value;
-
-
-    data.modelo2 =
-        modelo2.value;
-
-
-    data.tamanho2 =
-        tamanho2.value;
-
-}
-
-
-            /* =============================================
-               VALOR
-            ============================================== */
-
-            if (
-                selectedPlan.value ===
-                "casadinha"
-            ) {
-
-                data.valor = 139.90;
-
-            } else {
-
-                /*
-                 * Alteraremos quando você confirmar
-                 * o preço individual.
-                 */
-
-                data.valor = 0;
-
-            }
-
-
-            /* =============================================
-               ESTADO DO BOTÃO
-            ============================================== */
-
-            const originalText =
-                finishButton.textContent;
-
-
-            finishButton.disabled = true;
-
-            finishButton.textContent =
-                "ENVIANDO INSCRIÇÃO...";
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        API_URL,
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "text/plain;charset=utf-8"
-                            },
-
-                            body:
-                                JSON.stringify({
-                                    action: "createRegistration",
-                                    ...data
-                        })
-            }
-        );
-                    
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Não foi possível comunicar com o servidor."
-                    );
-
-                }
-
-
-                const result =
-                    await response.json();
-
-
-                /* =============================================
-                   ERRO RETORNADO PELO APPS SCRIPT
-                ============================================== */
-
-                if (!result.success) {
-
-                    throw new Error(
-                        result.message ||
-                        "Não foi possível concluir a inscrição."
-                    );
-
-                }
-                /* =============================================
-                   ENVIAR COMPROVANTE
-                ============================================== */
-
-                finishButton.textContent =
-                    "ENVIANDO COMPROVANTE...";
-
-
-                const receiptFile =
-                    receipt.files[0];
-
-
-                await uploadReceipt(
-                    result.registrationId,
-                    data.telefone1,
-                    receiptFile
-                );
-
-                /* =============================================
-                   SUCESSO
-                ============================================== */
-
-                form.style.display =
-                    "none";
-
-
-                success.classList.add(
-                    "active"
-                );
-
-
-                document.getElementById(
-                    "registrationNumber"
-                ).textContent =
-                    result.registrationId;
-
-
-                /* Atualiza vagas */
-
-                if (result.vacancies) {
-
-                    updateVacancies(
-                        result.vacancies
-                    );
-
-                }
-
-
-                success.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-
-            } catch (error) {
-
-                console.error(
-                    "Erro na inscrição:",
-                    error
-                );
-
-
-                alert(
-                    error.message ||
-                    "Ocorreu um erro ao realizar a inscrição."
-                );
-
-
-            } finally {
-
-                finishButton.disabled =
-                    false;
-
-
-                finishButton.textContent =
-                    originalText;
-
-            }
-
-        }
+  }
+
+  // Verificar cupom promocional
+  if (
+    couponInput?.value.trim() &&
+    normalizeCoupon(couponInput.value) !== cupomAplicado
+  ) {
+    event.preventDefault();
+
+    showMessage(
+      "Aplique um cupom válido ou remova o código informado."
     );
 
-    /* =====================================================
-       CONTROLE DE VAGAS
-    ===================================================== */
+    return;
+  }
 
-    async function loadVacancies() {
+  // Atualizar link conforme o preço
+  updateStonePaymentLink();
 
-        try {
+  pagamentoIniciado = true;
 
-            const response =
-                await fetch(
-                    `${API_URL}?action=vagas`
-                );
+  // Bloquear alterações do cupom
+  if (couponInput) {
+    couponInput.readOnly = true;
+  }
 
+  if (couponButton) {
+    couponButton.disabled = true;
+  }
 
-            if (!response.ok) {
-                return;
-            }
+  setCouponFeedback(
+    "Link de pagamento aberto. Após pagar, retorne para enviar o comprovante.",
+    "success"
+  );
+});
 
+  // ==========================================
+  // COMPROVANTE DE PAGAMENTO
+  // ==========================================
 
-            const data =
-                await response.json();
-
-
-            updateVacancies(data);
-
-
-        } catch (error) {
-
-            console.warn(
-                "Não foi possível consultar as vagas.",
-                error
-            );
-
-        }
-
+  function validateReceipt(file) {
+    if (!file) {
+      throw new Error(
+        "Selecione o comprovante de pagamento."
+      );
     }
 
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf"
+    ];
 
-    /* =====================================================
-   ATUALIZAR INTERFACE DE VAGAS
-===================================================== */
-
-function updateVacancies(data) {
-
-    const vacanciesText =
-        document.getElementById(
-            "vacanciesText"
-        );
-
-    const progress =
-        document.getElementById(
-            "vacanciesProgress"
-        );
-
-
-    if (!vacanciesText || !progress) {
-        return;
-    }
-
-
-    /* =================================================
-       DADOS DE VAGAS
-
-       Compatível tanto com:
-       vagasTotal / vagasOcupadas / vagasDisponiveis
-
-       quanto com:
-       total / occupied / available
-    ================================================= */
-
-    const total =
-        Number(
-            data.vagasTotal ??
-            data.total ??
-            data.totalSlots ??
-            200
-        );
-
-
-    const occupied =
-        Number(
-            data.vagasOcupadas ??
-            data.occupied ??
-            data.occupiedSlots ??
-            data.totalAtletas ??
-            0
-        );
-
-
-    const available =
-        Number(
-            data.vagasDisponiveis ??
-            data.available ??
-            data.availableSlots ??
-            (total - occupied)
-        );
-
-
-    console.log(
-        "Controle de vagas:",
-        {
-            total,
-            occupied,
-            available,
-            dadosBackend: data
-        }
-    );
-
-
-    /* =================================================
-       TEXTO DE VAGAS
-    ================================================= */
-
-    vacanciesText.textContent =
-        `${available} vagas disponíveis`;
-
-
-    /* =================================================
-       BARRA DE PROGRESSO
-    ================================================= */
-
-    const percentage =
-        total > 0
-            ? Math.min(
-                100,
-                (occupied / total) * 100
-            )
-            : 0;
-
-
-    progress.style.width =
-        `${percentage}%`;
-
-
-    /* =================================================
-       ÚLTIMAS VAGAS
-    ================================================= */
+    const allowedExtensions = /\.(jpe?g|png|pdf)$/i;
 
     if (
-        available > 0 &&
-        available <= 10
+      !allowedTypes.includes(file.type) ||
+      !allowedExtensions.test(file.name)
     ) {
-
-        vacanciesText.textContent =
-            `🔥 ÚLTIMAS ${available} VAGAS`;
-
+      throw new Error(
+        "Formato inválido. Envie um arquivo JPG, PNG ou PDF."
+      );
     }
 
+    if (file.size <= 0) {
+      throw new Error("O arquivo selecionado está vazio.");
+    }
 
-    /* =================================================
-       BOTÕES DE INSCRIÇÃO
-    ================================================= */
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error(
+        "O comprovante deve ter no máximo 5 MB."
+      );
+    }
 
-    const registrationButtons =
-        document.querySelectorAll(
-            ".registration-button"
-        );
+    return true;
+  }
 
+  receipt?.addEventListener("change", () => {
+    const file = receipt.files?.[0];
 
-    registrationButtons.forEach(
-        (button) => {
+    if (!file) {
+      if (selectedFile) {
+        selectedFile.textContent = "";
+      }
+      return;
+    }
 
-            const plan =
-                String(
-                    button.dataset.plan || ""
-                )
-                    .trim()
-                    .toLowerCase();
+    try {
+      validateReceipt(file);
 
+      if (selectedFile) {
+        selectedFile.textContent =
+          `Arquivo selecionado: ${file.name}`;
+      }
+    } catch (error) {
+      receipt.value = "";
 
-            /*
-             * Nenhuma vaga disponível.
-             */
+      if (selectedFile) {
+        selectedFile.textContent = "";
+      }
 
-            if (available <= 0) {
+      showMessage(error.message);
+    }
+  });
 
-                button.disabled = true;
-                button.textContent =
-                    "ESGOTADO";
+  // ==========================================
+  // CONVERTER ARQUIVO PARA BASE64
+  // ==========================================
 
-                return;
-            }
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
 
+      reader.onload = () => {
+        const result = String(reader.result || "");
+        const commaIndex = result.indexOf(",");
 
-            /*
-             * Casadinha ocupa duas vagas.
-             *
-             * Se existir somente uma vaga,
-             * Individual continua disponível
-             * e Casadinha é bloqueada.
-             */
-
-            if (
-                plan === "casadinha" &&
-                available < 2
-            ) {
-
-                button.disabled = true;
-
-                button.textContent =
-                    "SEM VAGAS PARA CASADINHA";
-
-                return;
-            }
-
-
-            /*
-             * Plano disponível.
-             */
-
-            button.disabled = false;
-            button.textContent =
-                "INSCREVA-SE";
-
+        if (commaIndex === -1) {
+          reject(
+            new Error("Não foi possível ler o comprovante.")
+          );
+          return;
         }
-    );
 
+        resolve(result.slice(commaIndex + 1));
+      };
 
-    /* =================================================
-       EVENTO ESGOTADO
-    ================================================= */
+      reader.onerror = () => {
+        reject(
+          new Error("Erro ao ler o arquivo selecionado.")
+        );
+      };
 
-    if (available <= 0) {
+      reader.readAsDataURL(file);
+    });
+  }
 
-        vacanciesText.textContent =
-            "INSCRIÇÕES ESGOTADAS";
+  
+  // ==========================================
+  // ENVIAR COMPROVANTE PARA O GOOGLE APPS SCRIPT
+  // ==========================================
 
+  
+async function uploadReceipt(registrationId, phone, file) {
+  validateReceipt(file);
+
+  const base64 = await fileToBase64(file);
+
+  return await postAPI({
+    action: "uploadComprovante",
+    registrationId: String(registrationId),
+    telefone: normalizePhone(phone),
+    file: {
+      name: file.name,
+      mimeType: file.type,
+      base64: base64
     }
-
+  });
 }
 
 
-/* =====================================================
-   CARREGAR VAGAS AO ABRIR O SITE
-===================================================== */
+  // FIM DA PARTE 3
 
-loadVacancies();
+  // ==========================================
+  // MONTAR DADOS DA INSCRIÇÃO
+  // ==========================================
 
+  function buildRegistrationData() {
+    const distancia = getChecked("distancia");
+    const modelo = getChecked("modelo1");
+    const tamanho = getChecked("tamanho1");
+    const pagamento = getChecked("pagamento");
 
-/* =====================================================
-   FIM DOMContentLoaded
-===================================================== */
+    if (!distancia || !modelo || !tamanho || !pagamento) {
+      throw new Error(
+        "Existem informações obrigatórias não preenchidas."
+      );
+    }
+
+    return {
+      plano: "individual",
+      nome1: getValue("nome1"),
+      telefone1: normalizePhone(getValue("telefone1")),
+      nascimento1: getValue("nascimento1"),
+      distancia1: distancia.value,
+      modelo1: modelo.value,
+      tamanho1: tamanho.value,
+      formaPagamento: pagamento.value.toUpperCase(),
+      regulamentoAceito: true,
+      cupom: cupomAplicado,
+      divulgador: getCouponOwner(cupomAplicado),
+      desconto: cupomAplicado ? DESCONTO : 0,
+      valor: getCurrentPrice()
+    };
+  }
+
+  // ==========================================
+  // FINALIZAR INSCRIÇÃO
+  // ==========================================
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (enviandoInscricao) return;
+
+    if (
+      !validateStep(1) ||
+      !validateStep(2) ||
+      !validateStep(3)
+    ) {
+      return;
+    }
+
+    if (!$("regulationAccept")?.checked) {
+      showMessage(
+        "É necessário aceitar o regulamento do evento."
+      );
+      return;
+    }
+
+    const file = receipt?.files?.[0];
+
+    try {
+      validateReceipt(file);
+    } catch (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    let data;
+
+    try {
+      data = buildRegistrationData();
+    } catch (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    enviandoInscricao = true;
+
+    const originalText =
+      finishButton?.textContent || "FINALIZAR INSCRIÇÃO";
+
+    if (finishButton) {
+      finishButton.disabled = true;
+      finishButton.textContent = "PROCESSANDO...";
+    }
+
+    try {
+      let registrationId = inscricaoCriada;
+
+      // ======================================
+      // 1. CRIAR INSCRIÇÃO
+      // ======================================
+
+      if (!registrationId) {
+        if (finishButton) {
+          finishButton.textContent =
+            "REGISTRANDO INSCRIÇÃO...";
+        }
+
+        const result = await postAPI({
+          action: "createRegistration",
+          ...data
+        });
+
+        registrationId =
+          result.registrationId ||
+          result.inscricaoId ||
+          result.id;
+
+        if (!registrationId) {
+          throw new Error(
+            "O servidor não retornou o número da inscrição."
+          );
+        }
+
+        inscricaoCriada = String(registrationId);
+
+        if (result.vacancies) {
+          updateVacancies(result.vacancies);
+        }
+      }
+
+      // ======================================
+      // 2. ENVIAR COMPROVANTE
+      // ======================================
+
+      if (finishButton) {
+        finishButton.textContent =
+          "ENVIANDO COMPROVANTE...";
+      }
+
+      await uploadReceipt(
+        inscricaoCriada,
+        data.telefone1,
+        file
+      );
+
+      // ======================================
+      // 3. EXIBIR CONFIRMAÇÃO
+      // ======================================
+
+      form.style.display = "none";
+
+      if (success) {
+        success.classList.add("active");
+        success.style.display = "block";
+      }
+
+      if ($("registrationNumber")) {
+        $("registrationNumber").textContent =
+          inscricaoCriada;
+      }
+
+      success?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+      // ======================================
+      // 4. ATUALIZAR VAGAS
+      // ======================================
+
+      loadVacancies();
+
+    } catch (error) {
+      console.error(
+        "Erro ao finalizar inscrição:",
+        error
+      );
+
+      if (inscricaoCriada) {
+        showMessage(
+          `Sua inscrição foi criada com o número ` +
+          `${inscricaoCriada}, mas não foi possível ` +
+          `concluir o envio do comprovante. ` +
+          `Não faça outra inscrição. ` +
+          `Tente enviar novamente. ` +
+          `Detalhes: ${error.message}`
+        );
+      } else {
+        showMessage(
+          error.message ||
+          "Não foi possível concluir a inscrição. Tente novamente."
+        );
+      }
+
+    } finally {
+      enviandoInscricao = false;
+
+      if (finishButton) {
+        finishButton.disabled = false;
+        finishButton.textContent = originalText;
+      }
+    }
+  });
+
+  // ==========================================
+  // CONTROLE DE VAGAS
+  // ==========================================
+
+  function updateVacancies(data) {
+    const vacanciesText = $("vacanciesText");
+    const progress = $("vacanciesProgress");
+
+    if (!data || !vacanciesText || !progress) {
+      return;
+    }
+
+    const total = Number(
+      data.vagasTotal ??
+      data.total ??
+      data.totalSlots ??
+      LIMITE_VAGAS
+    );
+
+    const occupied = Number(
+      data.vagasOcupadas ??
+      data.occupied ??
+      data.occupiedSlots ??
+      data.totalAtletas ??
+      0
+    );
+
+    const available = Number(
+      data.vagasDisponiveis ??
+      data.available ??
+      data.availableSlots ??
+      total - occupied
+    );
+
+    if (
+      !Number.isFinite(total) ||
+      !Number.isFinite(occupied) ||
+      !Number.isFinite(available) ||
+      total <= 0
+    ) {
+      console.warn(
+        "Dados de vagas inválidos:",
+        data
+      );
+      return;
+    }
+
+    const percentage = Math.min(
+      100,
+      Math.max(0, (occupied / total) * 100)
+    );
+
+    progress.style.width = `${percentage}%`;
+
+    if (available <= 0) {
+      vacanciesText.textContent =
+        "INSCRIÇÕES ESGOTADAS";
+    } else if (available <= 10) {
+      vacanciesText.textContent =
+        `🔥 ÚLTIMAS ${available} VAGAS`;
+    } else {
+      vacanciesText.textContent =
+        `${available} vagas disponíveis`;
+    }
+
+    document
+      .querySelectorAll(".registration-button")
+      .forEach(button => {
+        button.disabled = available <= 0;
+
+        button.textContent =
+          available <= 0
+            ? "ESGOTADO"
+            : "QUERO PARTICIPAR";
+      });
+  }
+
+  // ==========================================
+  // CONSULTAR VAGAS NA API
+  // ==========================================
+
+  async function loadVacancies() {
+    try {
+      const response = await fetch(
+        `${API_URL}?action=vagas`
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Erro HTTP ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+
+      if (data.success === false) {
+        throw new Error(
+          data.message || "Erro ao consultar vagas."
+        );
+      }
+
+      updateVacancies(data.vacancies || data);
+
+    } catch (error) {
+      console.warn(
+        "Não foi possível consultar as vagas:",
+        error
+      );
+
+      const vacanciesText = $("vacanciesText");
+
+      if (
+        vacanciesText &&
+        vacanciesText.textContent.includes("Consultando")
+      ) {
+        vacanciesText.textContent =
+          "Disponibilidade sob consulta";
+      }
+    }
+  }
+
+  // ==========================================
+  // INICIALIZAÇÃO
+  // ==========================================
+
+  configurePlan();
+
+  updateCouponUI();
+
+  showStep(1);
+
+  // Oculta o formulário até o atleta clicar
+  // em QUERO PARTICIPAR.
+  wrapper.classList.remove("active");
+
+  // Mantém a tela de confirmação oculta.
+  if (success) {
+    success.classList.remove("active");
+    success.style.display = "none";
+  }
+
+  // Consulta a disponibilidade.
+  loadVacancies();
+
+  console.info(
+    "Dispara TechFit Ano III — módulo de inscrições inicializado."
+  );
+
+  
+function formatPhone(value) {
+  const digits = String(value || "")
+    .replace(/\D/g, "")
+    .slice(0, 11);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  if (digits.length <= 7) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function isValidMobilePhone(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+
+  return /^[1-9][0-9]9[0-9]{8}$/.test(digits);
+}
+
 
 });
+
+
