@@ -3575,3 +3575,10 @@ section {
 
     color: var(--white);
 }
+/* Ajustes pontuais de estabilidade do layout */
+.hero-container { width: min(92%, var(--container)); min-width: 0; }
+.hero-content { width: 100%; min-width: 0; }
+.hero-title { max-width: 100%; }
+.vacancies-highlight { right: 0; }
+@media (min-width: 1025px) { .hero-content { padding-right: 190px; } }
+@media (max-width: 1024px) { .hero-content { padding-right: 0; } }
