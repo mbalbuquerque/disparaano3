@@ -73,7 +73,9 @@ if (phoneInput) {
     disparadarla: "Darla",
     disparawanessa: "Wanessa",
     disparatati: "Tati",
-    disparatavares: "Tavares"
+    disparatavares: "Tavares",
+    disparatati: "Tati",
+    bazzi10: "Bazzi"
   });
 
   // ==========================================
