@@ -3451,28 +3451,38 @@ section {
    ACESSO ADMINISTRATIVO
 ===================================================== */
 
-.admin-access {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
 
-    margin-top: 20px;
+/* ACESSO ADMINISTRATIVO */
 
-    color: #77819a;
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-decoration: none;
-
-    opacity: 0.65;
-    transition:
-        color 0.2s ease,
-        opacity 0.2s ease;
+.footer .admin-access {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease,
+              transform 0.2s ease;
 }
 
-.admin-access:hover {
-    color: #ffffff;
-    opacity: 1;
+.footer .admin-access:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+  .footer .admin-access {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
 
 /* =====================================================
    DISTÂNCIA
