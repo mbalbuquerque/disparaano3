@@ -38,7 +38,7 @@ if (phoneInput) {
       "https://payment-link-v3.stone.com.br/pl_GJrE38wPApM1mpmtwEH0yo5vxl0j9B7Q",
 
     promocional:
-      "https://payment-link-v3.stone.com.br/pl_eY6raLb87lBZAO0hWnU32nDXW0N9KVyw"
+      "https://www.mercadopago.com.br/checkout/v1/payment/redirect/37363745-3719-4702-b1b3-a6362da2a5b3/payment-option-form/?source=link&router-request-id=e7387fcd-2460-4567-b634-f1af02746217&preference-id=114279379-fb5dfd96-92de-4a69-8f99-44fc3053c813&p=8dc4c8e65d9eb4d96d7dc08da4834478"
   });
 
   const PRECO_NORMAL = 87;
