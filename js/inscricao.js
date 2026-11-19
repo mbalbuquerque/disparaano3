@@ -38,7 +38,7 @@ if (phoneInput) {
       "https://payment-link-v3.stone.com.br/pl_GJrE38wPApM1mpmtwEH0yo5vxl0j9B7Q",
 
     promocional:
-      "https://payment-link-v3.stone.com.br/pl_drLgqXYjzZDv684hXOcGX5G1wJ472aA9"  
+        "https://payment-link-v3.stone.com.br/pl_drLgqXYjzZDv684hXOcGX5G1wJ472aA9"
   });
 
   const PRECO_NORMAL = 87;
